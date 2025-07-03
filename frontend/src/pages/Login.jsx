@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,6 +20,7 @@ export default function Login() {
       return;
     }
     console.log('Login form submitted:', form);
+    navigate('/dashboard');
   };
 
   const togglePassword = () => setShowPassword((prev) => !prev);
@@ -148,6 +150,7 @@ export default function Login() {
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-colors"
             aria-label="Sign in with Google"
+            onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}
           >
             <svg
               className="w-[22px] h-[22px] fill-white"
@@ -176,6 +179,7 @@ export default function Login() {
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-colors"
             aria-label="Sign in with LinkedIn"
+            onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}
           >
             <svg
               className="w-[22px] h-[22px] fill-white"

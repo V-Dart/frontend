@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -14,6 +14,7 @@ export default function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,6 +32,7 @@ export default function Signup() {
       return;
     }
     console.log('Signup form submitted:', form);
+    navigate('/login');
   };
 
   // Helper to determine if input is filled
@@ -280,6 +282,7 @@ export default function Signup() {
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-colors"
             aria-label="Sign up with Google"
+            onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}
           >
             <svg
               className="w-[22px] h-[22px] fill-white"
@@ -308,6 +311,7 @@ export default function Signup() {
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-colors"
             aria-label="Sign up with LinkedIn"
+            onClick={(e) => { e.preventDefault(); navigate('/dashboard'); }}
           >
             <svg
               className="w-[22px] h-[22px] fill-white"

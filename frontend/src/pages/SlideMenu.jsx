@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import React from "react";
 import {
   FaTasks,
   FaComments,
@@ -9,15 +10,15 @@ import {
 } from "react-icons/fa";
 
 const menuItems = [
-  { name: "Task", icon: <FaTasks />, to: "/dashboard/task" },
-  { name: "Live Chat", icon: <FaComments />, to: "/dashboard/chat" },
-  { name: "PowerBI", icon: <FaChartBar />, to: "/dashboard/powerbi" },
-  { name: "Workspace", icon: <FaProjectDiagram />, to: "/dashboard/workspace" },
-  { name: "Pipelines", icon: <FaStream />, to: "/dashboard/pipelines" },
-  { name: "Meet", icon: <FaVideo />, to: "/dashboard/meet" },
+  { name: "Task", icon: <FaTasks />, to: "/task" },
+  { name: "Live Chat", icon: <FaComments />, to: "/livechat" },
+  { name: "PowerBI", icon: <FaChartBar />, to: "/powerbi" },
+  { name: "Workspace", icon: <FaProjectDiagram />, to: "/workspace" },
+  { name: "Pipelines", icon: <FaStream />, to: "/pipelines" },
+  { name: "Meet", icon: <FaVideo />, to: "/meet" },
 ];
 
-export default function SlideMenu({ isOpen, onClose }) {
+export default function SlideMenu({ isOpen, onClose, onMenuHover, onMenuLeave }) {
   return (
     <>
       {/* Overlay dimmer */}
@@ -29,13 +30,13 @@ export default function SlideMenu({ isOpen, onClose }) {
       />
 
       {/* Sliding panel */}
-      
       <div
         className={`fixed top-0 left-2.5 h-full w-51 bg-[#273549] text-white z-10  
             transition-transform duration-300 ease-in-out
             border-l-2 border-gray-600
             ${ isOpen ? "translate-x-10" : "-translate-x-60"} `}
-            //style={{ left: '48px' }}  // 64px - 2px border = 62px
+        onMouseEnter={onMenuHover}
+        onMouseLeave={onMenuLeave}
       >
         <div className="p-4 font-semibold text-lg">
           Menu
