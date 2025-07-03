@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Login() {
-  const [form, setForm] = useState({ username: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -14,7 +14,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.username || !form.password) {
+    if (!form.email || !form.password) {
       setError('Please fill in all fields.');
       return;
     }
@@ -33,29 +33,29 @@ export default function Login() {
           Login With Your Account
         </h2>
         <form className="flex flex-col gap-[22px]" onSubmit={handleSubmit} autoComplete="off">
-          {/* Username Field with floating label */}
+          {/* Email Field with floating label */}
           <div className="relative w-full box-border flex flex-col">
             <input
-              id="username"
-              name="username"
-              type="text"
-              value={form.username}
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
               onChange={handleChange}
               className={`w-full box-border pt-[22px] pb-[10px] px-4 text-base border-[1.5px] border-[#334155] rounded-[10px] bg-[#0f172a] text-white transition-colors duration-300 outline-none mb-0 focus:border-blue-600 focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)] peer`}
               placeholder=" "
               required
-              autoComplete="username"
+              autoComplete="email"
             />
             <label
-              htmlFor="username"
+              htmlFor="email"
               className={`absolute left-4 bg-transparent pointer-events-none transition-all font-medium z-20
-                ${isFilled(form.username)
+                ${isFilled(form.email)
                   ? 'top-[3px] left-[14px] text-[0.80rem] text-blue-400 px-[2px] shadow-[0_1px_2px_rgba(15,23,42,0.08)]'
                   : 'top-[18px] text-base text-[#94a3b8]'}
                 peer-focus:top-[3px] peer-focus:left-[14px] peer-focus:text-[0.80rem] peer-focus:text-blue-400 peer-focus:bg-transparent peer-focus:px-[2px] peer-focus:shadow-[0_1px_2px_rgba(15,23,42,0.08)]
                 peer-placeholder-shown:top-[18px] peer-placeholder-shown:left-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-[#94a3b8]`}
             >
-              Username or Email
+              Email
             </label>
           </div>
           {/* Password Field with floating label */}

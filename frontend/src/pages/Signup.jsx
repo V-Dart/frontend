@@ -36,15 +36,18 @@ export default function Signup() {
   // Helper to determine if input is filled
   const isFilled = (val) => val && val.length > 0;
 
+  // Track focus for phone field
+  const [phoneFocused, setPhoneFocused] = useState(false);
+
   return (
     <div className="min-h-screen h-screen flex justify-end items-center bg-[#0f172a] font-sans p-0 overflow-hidden">
-      <div className="mr-0 ml-0 mt-0 mb-0 max-w-[500px] w-full bg-[#1e293b] p-10 rounded-[4px] shadow-lg border-none h-full overflow-visible select-none flex flex-col justify-center">
-        <h2 className="mb-7 text-3xl font-extrabold text-white text-center tracking-tight">
+      <div className="mr-0 ml-0 mt-0 mb-0 max-w-[500px] w-full bg-[#1e293b] p-10 rounded-[4px] shadow-lg border-none h-full overflow-visible select-none flex flex-col justify-center signup-container-no-margin">
+        <h2 className="mb-7 text-4xl font-extrabold text-white text-center tracking-tight" style={{ fontSize: '2.2rem', lineHeight: '4rem' }}>
           Create Account
         </h2>
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit} autoComplete="off">
+        <form className="flex flex-col gap-2 signup-form-gap-responsive" onSubmit={handleSubmit} autoComplete="off">
           {/* Name Field with floating label */}
-          <div className="relative w-full box-border flex flex-col">
+          <div className="relative w-full box-border flex flex-col signup-field-responsive">
             <input
               id="name"
               name="name"
@@ -69,7 +72,7 @@ export default function Signup() {
             </label>
           </div>
           {/* Email Field with floating label */}
-          <div className="relative w-full box-border flex flex-col">
+          <div className="relative w-full box-border flex flex-col signup-field-responsive">
             <input
               id="email"
               name="email"
@@ -94,7 +97,7 @@ export default function Signup() {
             </label>
           </div>
           {/* Password Field with floating label */}
-          <div className="relative w-full box-border flex flex-col">
+          <div className="relative w-full box-border flex flex-col signup-field-responsive">
             <input
               id="password"
               name="password"
@@ -163,7 +166,7 @@ export default function Signup() {
             </button>
           </div>
           {/* Confirm Password Field with floating label */}
-          <div className="relative w-full box-border flex flex-col">
+          <div className="relative w-full box-border flex flex-col signup-field-responsive">
             <input
               id="confirmPassword"
               name="confirmPassword"
@@ -234,23 +237,39 @@ export default function Signup() {
           {/* Phone Field with floating label and +91 prefix */}
           <div className="relative w-full box-border flex flex-col">
             <div className="relative w-full flex items-stretch">
-              <span className="flex items-center px-3 rounded-l-[8px] bg-[#334155] text-[#cbd5e1] text-[0.98rem] border border-r-0 border-[#334155] select-none z-10 pointer-events-none">+91</span>
+              <span className="flex items-center px-3 rounded-l-[8px] bg-[#334155] text-[#cbd5e1] text-[0.98rem] border border-r-0 border-[#334155] select-none pointer-events-none">+91</span>
               <input
                 id="phone"
                 name="phone"
                 type="tel"
                 value={form.phone}
                 onChange={handleChange}
-                className="peer w-full box-border pt-4 pb-2 px-3 text-[0.98rem] border border-l-0 border-[#334155] rounded-r-[8px] bg-[#0f172a] text-white transition-all duration-300 outline-none mb-0 focus:border-blue-600 focus:shadow-[0_0_0_2px_rgba(37,99,235,0.15)]"
+                className="peer w-full box-border pt-4 pb-2 px-3 text-[0.98rem] border border-l-0 border-[#334155] rounded-r-[8px] bg-[#0f172a] text-white transition-colors duration-300 outline-none mb-0 focus:border-blue-600 focus:shadow-[0_0_0_2px_rgba(37,99,235,0.15)]"
                 placeholder=" "
                 required
                 autoComplete="tel"
+                style={{
+                  boxShadow: '0 0 0 2px rgba(37,99,235,0.15)',
+                  borderColor: '#334155',
+                }}
+                onFocus={e => {
+                  setPhoneFocused(true);
+                  e.target.previousSibling.style.borderColor = '#2563eb';
+                  e.target.style.borderColor = '#2563eb';
+                  e.target.style.boxShadow = '0 0 0 2px rgba(37,99,235,0.15)';
+                }}
+                onBlur={e => {
+                  setPhoneFocused(false);
+                  e.target.previousSibling.style.borderColor = '#334155';
+                  e.target.style.borderColor = '#334155';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
             <label
               htmlFor="phone"
               className={`absolute bg-transparent pointer-events-none transition-all font-semibold z-20
-                ${isFilled(form.phone)
+                ${(isFilled(form.phone) || phoneFocused)
                   ? 'top-0.5 left-16 text-[0.85rem] text-blue-400 px-[2px] shadow-[0_1px_2px_rgba(15,23,42,0.08)]'
                   : 'top-1/2 left-16 -translate-y-1/2 text-[0.98rem] text-[#94a3b8]'}
                 peer-focus:top-0.5 peer-focus:left-16 peer-focus:text-[0.85rem] peer-focus:text-blue-400 peer-focus:bg-transparent peer-focus:px-[2px] peer-focus:shadow-[0_1px_2px_rgba(15,23,42,0.08)] peer-focus:-translate-y-0
@@ -271,12 +290,12 @@ export default function Signup() {
             Sign Up
           </button>
         </form>
-        <div className="flex items-center my-7 text-center text-[#94a3b8] font-semibold text-base w-full">
+        <div className="flex items-center my-4 text-center text-[#94a3b8] font-semibold text-base w-full signup-divider-responsive">
           <div className="flex-1 h-px bg-[#334155]" />
           <span className="px-3">or sign up with</span>
           <div className="flex-1 h-px bg-[#334155]" />
         </div>
-        <div className="flex gap-[14px] justify-center mt-2">
+        <div className="flex gap-[10px] justify-center mt-1 signup-socials-responsive">
           <button
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-base transition-colors"
             aria-label="Sign up with Google"
@@ -320,7 +339,7 @@ export default function Signup() {
             LinkedIn
           </button>
         </div>
-        <div className="mt-[22px] text-center text-[#94a3b8] text-base">
+        <div className="mt-3 text-center text-[#94a3b8] text-base signup-bottom-responsive">
           Already have an account?
           <Link
             to="/login"
@@ -331,6 +350,21 @@ export default function Signup() {
         </div>
       </div>
       <style>{`
+        /* Responsive content inside the signup container */
+        @media (max-height: 900px) {
+          .mb-7 { margin-bottom: 1.2rem !important; }
+          .text-3xl { font-size: 1.5rem !important; }
+          .gap-3 { gap: 0.7rem !important; }
+          .text-base, .text-[0.98rem], .text-[1.1rem] { font-size: 0.95rem !important; }
+          .py-[15px] { padding-top: 0.7rem !important; padding-bottom: 0.7rem !important; }
+        }
+        @media (max-height: 700px) {
+          .mb-7 { margin-bottom: 1rem !important; }
+          .text-3xl { font-size: 1.1rem !important; }
+          .gap-3 { gap: 0.4rem !important; }
+          .text-base, .text-[0.98rem], .text-[1.1rem] { font-size: 0.85rem !important; }
+          .py-[15px] { padding-top: 0.4rem !important; padding-bottom: 0.4rem !important; }
+        }
         input[type='password']::-ms-reveal,
         input[type='password']::-ms-clear {
           display: none;
@@ -344,6 +378,16 @@ export default function Signup() {
         }
         input[type='password']::-o-input-password-reveal-button {
           display: none !important;
+        }
+        .signup-container-no-margin {
+          height: 100vh !important;
+          min-height: 100vh !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          border-radius: 0 !important;
+        }
+        html, body {
+          overflow: hidden !important;
         }
       `}</style>
     </div>
