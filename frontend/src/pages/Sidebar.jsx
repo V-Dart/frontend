@@ -14,7 +14,7 @@ import {
   FaBars,
   FaUserCircle
 } from "react-icons/fa";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo-profile.png";
 
 export default function Sidebar({ toggleSlideMenu, onHamburgerHover, onHamburgerLeave, isPermanent }) {
   const navigate = useNavigate();
