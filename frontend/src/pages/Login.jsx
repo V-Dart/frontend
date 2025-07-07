@@ -132,6 +132,9 @@ export default function Login() {
                 placeholder=" "
                 required
                 autoComplete="current-password"
+                spellCheck="false"
+                inputMode="text"
+                style={{ WebkitTextSecurity: showPassword ? 'none' : 'disc' }}
               />
               <label
                 htmlFor="password"
@@ -268,6 +271,16 @@ export default function Login() {
         .signup-container-no-margin:focus {
           outline: none !important;
           box-shadow: none !important;
+        }
+        /* Hide browser default password reveal (eye) icon for all password fields */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+          display: none !important;
+        }
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-input-decoration {
+          display: none !important;
+          visibility: hidden !important;
         }
       `}</style>
     </div>
