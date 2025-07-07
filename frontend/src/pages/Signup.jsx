@@ -46,30 +46,27 @@ import React, { useState } from 'react';
     
     return (
       <div className="min-h-screen h-screen flex flex-col lg:flex-row bg-[#0f172a] font-sans p-0 overflow-hidden">
-        {/* Left Panel: Illustration and Info */}
-        <div className="hidden lg:flex w-1/2 min-w-[300px] bg-[#0f172a] flex-col px-0 py-8 lg:px-0 lg:py-10">
-          {/* Logo + Name */}
-          <div className="flex items-center gap-3 mb-8 ml-8 md:ml-12">
-            <img src={logo} alt="Logo" className="h-10" />
-            <h1 className="text-white text-2xl font-bold">VLink CRM</h1>
-          </div>
-          {/* Centered Illustration and Quote */}
-          <div className="flex-1 flex flex-col justify-center items-center">
+        {/* Left Panel: Illustration and Info (now first) */}
+        <div className="hidden lg:flex w-1/2 min-w-[300px] bg-[#0f172a] flex-col items-center justify-center px-0 py-8 lg:px-0 lg:py-10">
+          <div className="flex flex-col items-center justify-center w-full">
+            <div className="flex items-center gap-3 mb-8 w-full pl-8 md:pl-12 justify-start">
+              <img src={logo} alt="Logo" className="h-10" />
+              <h1 className="text-white text-2xl font-bold">VLink CRM</h1>
+            </div>
             {/* Illustration */}
-            <div className="w-full flex justify-center mb-6">
-              <img src={illustration} alt="Illustration" className="max-w-xs md:max-w-sm w-full h-auto" />
+            <div className="flex justify-center mb-6 mt-[-32px] w-full">
+              <img src={illustration} alt="Illustration" className="w-[600px] h-[500px] object-contain mx-auto" />
             </div>
             {/* Quote */}
-            <div className="text-center text-[#94a3b8] text-base leading-relaxed">
+            <div className="text-center text-[#94a3b8] text-base leading-relaxed mt-[-28px] w-full flex flex-col items-center">
               <p className="italic text-[1rem]">“Smart workflows. Smarter decisions.”</p>
               <p className="text-[0.95rem] mt-1">Empower your supply chain from the very first login.</p>
             </div>
           </div>
         </div>
-
-        {/* Right Panel: Signup Form */}
+        {/* Right Panel: Signup Form (now second, right end) */}
         <div className="w-full flex justify-end items-stretch h-screen px-0 py-0 lg:w-1/2 lg:py-0 lg:pr-0 lg:pl-0">
-          <div className="w-full max-w-[500px] bg-[#1e293b] p-6 sm:p-8 md:p-10 rounded-none lg:rounded-[4px] shadow-none border-none h-full overflow-visible select-none flex flex-col justify-center signup-container-no-margin mr-0 ml-0">
+          <div className="w-full max-w-[500px] bg-[#1e293b] p-6 sm:p-8 md:p-10 rounded-none lg:rounded-[4px] shadow-none border-none h-full overflow-visible select-none flex flex-col justify-center signup-container-no-margin mr-0 ml-0 outline-none" tabIndex={-1}>
             <h2 className="mb-7 text-3xl font-extrabold text-white text-center tracking-tight leading-tight">
               Create Account
             </h2>
@@ -377,6 +374,10 @@ import React, { useState } from 'react';
         <style>{`
           html, body {
             overflow: hidden !important;
+          }
+          .signup-container-no-margin:focus {
+            outline: none !important;
+            box-shadow: none !important;
           }
         `}</style>
       </div>
