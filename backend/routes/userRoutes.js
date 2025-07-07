@@ -10,7 +10,14 @@ const router = express.Router();
 // @desc     Register a new user
 router.post('/register', async (req, res) => {
   try {
+    console.log('Registration request body:', req.body); // Debug log
+    
     const { username, email, password, phone, role } = req.body;
+
+    // Validation
+    if (!username || !email || !password || !phone) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
 
     // check if user already exists
     const existingUser = await User.findOne({ email });
@@ -28,20 +35,35 @@ router.post('/register', async (req, res) => {
       email,
       password: hashedPassword,
       phone,
-      role
+      role: role || 'admin'
     });
 
     // save user
     await newUser.save();
 
-    res.status(201).json({ message: 'User registered successfully!' });
+    res.status(201).json({ 
+      message: 'User registered successfully!',
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+        phone: newUser.phone,
+        role: newUser.role
+      }
+    });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Server Error' });
+    console.error('Registration error:', error);
+    
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: 'Invalid data provided' });
+    }
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Username or email already exists' });
+    }
+    
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 });
-
-module.exports = router;
 
 // @route    POST /api/users/login
 // @desc     Login user
@@ -88,3 +110,69 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 });
+
+// @route    POST /api/users/logout
+// @desc     Logout user
+router.post('/logout', async (req, res) => {
+  try {
+    // In a simple implementation, logout is handled on the client side
+    // by removing the token from localStorage. However, you can implement
+    // token blacklisting here if needed for enhanced security.
+    
+    res.status(200).json({
+      message: 'Logout successful',
+      success: true
+    });
+
+  } catch (error) {
+    console.error('Logout error:', error.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// @route    GET /api/users/profile
+// @desc     Get user profile (protected route)
+router.get('/profile', async (req, res) => {
+  try {
+    // Extract token from Authorization header
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({ message: 'No token, authorization denied' });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Get user from database (excluding password)
+    const user = await User.findById(decoded.id).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        createdAt: user.createdAt
+      }
+    });
+
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Token is not valid' });
+    }
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token has expired' });
+    }
+    
+    console.error('Profile error:', error.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+module.exports = router;
