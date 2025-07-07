@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { authAPI } from '../services/api';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
+   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -13,14 +15,51 @@ export default function Login() {
     setError('');
   };
 
-  const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation
     if (!form.email || !form.password) {
       setError('Please fill in all fields.');
       return;
     }
-    console.log('Login form submitted:', form);
-    navigate('/dashboard');
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await authAPI.login(form);
+      
+      // Store token and user data
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      if (response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      
+      console.log('Login successful:', response.data);
+      
+      // Redirect to dashboard or home page
+      navigate('/dashboard');
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      // Handle different types of errors
+      if (error.response) {
+        // Server responded with error status
+        setError(error.response.data.message || 'Login failed. Please check your credentials.');
+      } else if (error.request) {
+        // Request was made but no response received
+        setError('Unable to connect to server. Please try again.');
+      } else {
+        // Something else happened
+        setError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const togglePassword = () => setShowPassword((prev) => !prev);

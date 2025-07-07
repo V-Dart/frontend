@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
   import { Link, useNavigate } from 'react-router-dom';
+  import { authAPI } from '../services/api'; 
   import logo from '../assets/logo-profile.png';
   import illustration from '../assets/illustration.png';
 
@@ -13,6 +14,7 @@ import React, { useState } from 'react';
       phone: '',
     });
     const [error, setError] = useState('');
+     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
@@ -24,19 +26,65 @@ import React, { useState } from 'react';
       setError('');
     };
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if (!form.name || !form.email || !form.password || !form.confirmPassword || !form.phone) {
-        setError('Please fill in all fields.');
-        return;
-      }
-      if (form.password !== form.confirmPassword) {
-        setError('Passwords do not match.');
-        return;
-      }
-      console.log('Signup form submitted:', form);
+     const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!form.name || !form.email || !form.password || !form.confirmPassword || !form.phone) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    if (form.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(form.phone)) {
+      setError('Phone number must be exactly 10 digits.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const userData = {
+        username: form.name,  // Backend expects 'username'
+        email: form.email,
+        password: form.password,
+        phone: parseInt(form.phone),  // Backend expects phone as Number
+        role: 'admin'  // Based on your backend default
+      };
+
+      console.log('Sending userData:', userData); // Debug log
+      const response = await authAPI.register(userData);
+      console.log('Signup successful:', response.data);
+      
+      // Show success message and redirect to login
+      alert('Registration successful! Please log in.');
       navigate('/login');
-    };
+      
+    } catch (error) {
+      console.error('Signup error:', error);
+      
+      if (error.response) {
+        setError(error.response.data.message || 'Registration failed. Please try again.');
+      } else if (error.request) {
+        setError('Unable to connect to server. Please try again.');
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
     // Helper to determine if input is filled
     const isFilled = (val) => val && val.length > 0;
@@ -307,9 +355,10 @@ import React, { useState } from 'react';
               )}
               <button
                 type="submit"
-                className="w-full mt-[10px] py-[15px] text-[1.1rem] font-extrabold text-white bg-blue-600 rounded-[10px] border-none cursor-pointer transition-colors duration-200 shadow-md tracking-wide hover:bg-blue-700 hover:shadow-lg"
+                disabled={loading}
+                className="w-full mt-[10px] py-[15px] text-[1.1rem] font-extrabold text-white bg-blue-600 rounded-[10px] border-none cursor-pointer transition-colors duration-200 shadow-md tracking-wide hover:bg-blue-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign Up
+                {loading ? 'Creating Account...' : 'Sign Up'}
               </button>
             </form>
             <div className="flex items-center my-4 text-center text-[#94a3b8] font-semibold text-base w-full signup-divider-responsive">
